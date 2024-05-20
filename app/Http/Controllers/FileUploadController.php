@@ -35,10 +35,11 @@ class FileUploadController extends Controller
          * validation for image
          */
         $request->validate([
+            'nama' => 'required|string|min:3',
             'berkas' => 'required|file|image|max:5000'
         ]);
         $file = $request->file('berkas');
-        $namaFile = 'web-' . time() . '.' . $file->getClientOriginalName();
+        $namaFile = $request->input('nama'). '.' . $file->getClientOriginalExtension();;
 
         /**
          * store will move file 'path/hashed_name' to Storage/App
@@ -56,12 +57,11 @@ class FileUploadController extends Controller
 
         $path = $file->move('image', $namaFile);
         $path = str_replace("\\","//",$path);
-        echo "Variabel path berisi: $path <br>";
-
         $pathBaru = asset('image/' . $namaFile);
 
-        echo "proses upload berhasil, data disimpan pada: $path";
+        echo "Gambar berhasil diupload ke <a href='$path'>$path</a>";
         echo "<br>";
-        echo "Tampilkan link: <a href='$pathBaru'>$pathBaru</a>";
+        echo "<img src='$pathBaru' style='width: 500px; height: 500px '>";
+
     }
 }
